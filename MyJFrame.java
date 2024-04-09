@@ -1,5 +1,5 @@
-
-public class MyJFrame {
+import javax.swing.JFrame;
+public class MyJFrame extends JFrame{
 
     public MyJFrame(String title) {
         super(title);
