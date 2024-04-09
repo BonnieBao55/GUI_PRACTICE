@@ -12,8 +12,10 @@ public class Main {
         // jFrame.setLocation(200,200);
         // jFrame.setVisible(true);
 
-        MyJFrame jFrame1 = new MyJFrame("Testing the GUI");
-        //MyJFrame jFrame = new MyJFrame();
+        // MyJFrame jFrame1 = new MyJFrame("Testing the GUI");
+        //MyJFrame jFrame2 = new MyJFrame();
+
+        TicTacToeGame ticTacToeGame = new TicTacToeGame();
 
     }
 
