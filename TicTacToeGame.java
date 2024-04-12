@@ -1,38 +1,50 @@
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 /**
- * Tictactoe
+ * TicTacToeGame
  */
-
 public class TicTacToeGame extends MyJFrame {
-    private static final Font BOLDFont = null;
-    JPanel jPanel;
-    ArrayList<JButton> buttons = new ArrayList<JButton>();;
-    int Rows = 3, COLUMNS = 3;
+
+    JPanel jPanel; // we want this to be accessible throughout the class
+    ArrayList<JButton> buttons = new ArrayList<JButton>();
+    int ROWS = 3, COLUMNS = 3;
     String currentPlayer = "x";
     Font font;
+    JMenuBar menuBar;
+    JMenu menu;
+    JMenuItem resetGameItem;
 
-    public TicTacToeGame(){
+    // constructor which has no parameters
+    public TicTacToeGame() {
+        // call the parent classes constructor and pass in a title
         super("Tic Tac Toe Game");
 
-        jPanel = new JPanel();
-        // jPanel.setLayout(new BorderLayout());
+        menuBar = new JMenuBar(); // create the menu bar
+        menu = new JMenu("Game Options"); // create the menu
+        resetGameItem = new JMenuItem("Reset Game"); // create the menu item 
+        resetGameItem.addActionListener(e -> ResetGame()); // this registers a listener that will listen for clicks on this button
 
-        // jPanel.add(new JButton("OK"));
-        // jPanel.add(new JButton("CANCLE"));
+        menu.add(resetGameItem); // add the menu item to the menu
+        menuBar.add(menu); // add the menu to the menu bar
+        setJMenuBar(menuBar); // add the menu bar to the JFrame
 
-        jPanel.setLayout(new GridLayout(Rows, COLUMNS));
-        font = new Font(Font.SERIF,Font.BOLD,100);
+        jPanel = new JPanel(); // needs to be instantiated
+        // // jPanel.setLayout(new BorderLayout());
 
+        // // jPanel.add(new JButton("OK"), BorderLayout.SOUTH);
+        // // jPanel.add(new JButton("Cancel"), BorderLayout.CENTER);
 
-        jPanel.setLayout(new GridLayout(3,3));
-        for (int i = 0; i < Rows * COLUMNS; i++){
+        jPanel.setLayout(new GridLayout(ROWS, COLUMNS));
+        // instantiating the FONT
+        font = new Font(Font.SERIF, Font.BOLD, 100);
+
+        for (int i = 0; i < ROWS * COLUMNS; i++) {
             JButton btn = new JButton();
-            btn.addActionListener(event -> ButtonClinked(event));
+            btn.addActionListener(event -> ButtonClicked(event));
+            // SET THE FONT on the BUTTON
             btn.setFont(font);
             buttons.add(btn);
             jPanel.add(btn);
@@ -42,45 +54,118 @@ public class TicTacToeGame extends MyJFrame {
         setVisible(true);
     }
 
-        public void ButtonClinked(ActionEvent event) {
-            JButton btnClinked = ((JButton)event.getSource());
-            btnClinked.setText(currentPlayer);
-            btnClinked.setEnabled(false);
+    private void setVisible(boolean b) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setVisible'");
+    }
 
+    private void setContentPane(JPanel jPanel2) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setContentPane'");
+    }
 
-            if (currentPlayer == "x"){
-                btnClinked.setBackground(Color.RED);
-                currentPlayer = "0";
+    private void setJMenuBar(JMenuBar menuBar2) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setJMenuBar'");
+    }
 
-            }
-            else{
-                btnClinked.setBackground(Color.GREEN);
-                currentPlayer = "x";
+    /**
+     * Will reset the game. This involves resetting who the current player is
+     * and resetting the text, color, and enabled status of each button
+     */
+    public void ResetGame() {
+        currentPlayer = "x";
+        for (int i = 0; i < buttons.size(); i++) {
+            JButton btn = buttons.get(i);
+            btn.setText("");
+            btn.setBackground(null);
+            btn.setEnabled(true);
+        }
+    }
 
+    public void ButtonClicked(ActionEvent event) {
 
+        JButton btnClicked = ((JButton) event.getSource());
+        btnClicked.setText(currentPlayer);
+        btnClicked.setEnabled(false);
+
+        if (currentPlayer == "x") {
+            btnClicked.setBackground(Color.RED);
+        } else {
+            btnClicked.setBackground(Color.GREEN);
+        }
+
+        boolean winnerFound = CheckWinner();
+
+        if (winnerFound) {
+            JOptionPane.showMessageDialog(null, currentPlayer + " has won the game!");
+
+            for (int i = 0; i < buttons.size(); i++) {
+                buttons.get(i).setEnabled(false);
             }
         }
 
-        public boolean CheckWinner(){
-            //column1
-            if (buttons.get(0).getText().equals(currentPlayer) && buttons.get(3).getText().equals(currentPlayer) && 
-            buttons.get(6).getText().equals(currentPlayer)){
-                return true;
-            }
+        SwitchPlayer();
+    }
 
-            //column2
-            if (buttons.get(1).getText().equals(currentPlayer) && buttons.get(4).getText().equals(currentPlayer) && 
-            buttons.get(7).getText().equals(currentPlayer)){
-                return true;}
-
-            //column3
-            if (buttons.get(2).getText().equals(currentPlayer) && buttons.get(5).getText().equals(currentPlayer) && 
-            buttons.get(8).getText().equals(currentPlayer)){
-                return true;
-            }
-            return false;
+    public void SwitchPlayer() {
+        if (currentPlayer == "x") {
+            currentPlayer = "o";
+        } else {
+            currentPlayer = "x";
         }
-
     }
     
+    public boolean CheckWinner() {
+        // first row
+        if(buttons.get(0).getText().equals(currentPlayer) && buttons.get(1).getText().equals(currentPlayer) &&
+                buttons.get(2).getText().equals(currentPlayer)) {
+            return true;
+        }
 
+        // second row
+        if(buttons.get(3).getText().equals(currentPlayer) && buttons.get(4).getText().equals(currentPlayer) &&
+                buttons.get(5).getText().equals(currentPlayer)) {
+            return true;
+        }
+        
+        // third row
+        if(buttons.get(6).getText().equals(currentPlayer) && buttons.get(7).getText().equals(currentPlayer) &&
+                buttons.get(8).getText().equals(currentPlayer)) {
+            return true;
+        }
+
+        // diagonal 1
+        if(buttons.get(0).getText().equals(currentPlayer) && buttons.get(4).getText().equals(currentPlayer) &&
+                buttons.get(8).getText().equals(currentPlayer)) {
+            return true;
+        }
+        
+        // diagonal 2
+        if(buttons.get(2).getText().equals(currentPlayer) && buttons.get(4).getText().equals(currentPlayer) &&
+                buttons.get(6).getText().equals(currentPlayer)) {
+            return true;
+        }
+        
+        // column 1 
+        if(buttons.get(0).getText().equals(currentPlayer) && buttons.get(3).getText().equals(currentPlayer) &&
+                buttons.get(6).getText().equals(currentPlayer)) {
+            return true;
+        }
+        
+        // column 2
+        if(buttons.get(1).getText().equals(currentPlayer) && buttons.get(4).getText().equals(currentPlayer) &&
+                buttons.get(7).getText().equals(currentPlayer)) {
+            return true;
+        }
+        
+        // column 3
+        if(buttons.get(2).getText().equals(currentPlayer) && buttons.get(5).getText().equals(currentPlayer) &&
+        buttons.get(8).getText().equals(currentPlayer)) {
+            return true;
+        }  
+            
+        
+        return false;
+    }
+}
